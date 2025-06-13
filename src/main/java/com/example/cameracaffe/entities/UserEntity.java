@@ -1,6 +1,7 @@
 package com.example.cameracaffe.entities;
 
 import com.example.cameracaffe.DTO.Roles;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +24,9 @@ public class UserEntity implements Serializable {
     private String email;
     private String password;
 
-    // Roles é una enum che assume valori ADMIN, EMPLOYEE, CUSTOMER
+    // Roles é una enum che assume valori ADMIN, EMPLOYEE, CUSTOMER, SUPPLIER
     private Roles role;
+
+    @Nullable
+    private String partitaIva;
 }

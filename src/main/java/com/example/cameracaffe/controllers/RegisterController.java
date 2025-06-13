@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Objects;
+
 @Controller
 @RequestMapping("/register")
 public class RegisterController {
@@ -24,7 +26,7 @@ public class RegisterController {
     }
 
     @PostMapping()
-    public String registerPost(@RequestParam String email, @RequestParam String password, @RequestParam String confirmPassword, Model model) {
+    public String registerPost(@RequestParam String email, @RequestParam String password, @RequestParam String confirmPassword, @RequestParam String pIva, Model model) {
         if(!password.equals(confirmPassword)) {
             model.addAttribute("passwordMismatch", true);
             return "register";
@@ -35,6 +37,9 @@ public class RegisterController {
                 String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
                 user.setPassword(hashed);
                 user.setRole(Roles.CUSTOMER);
+                if(Objects.equals(pIva, "")){
+                    user.setRole(Roles.SUPPLIER);
+                }
                 customUserDetailsService.save(user);
                 model.addAttribute("register-successful", true);
             }else{

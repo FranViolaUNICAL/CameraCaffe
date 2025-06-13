@@ -1,10 +1,7 @@
 package com.example.cameracaffe.entities;
 
 import com.example.cameracaffe.DTO.NaturaMovimentazione;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,4 +23,8 @@ public class MovimentazioneUscitaEntity implements Serializable {
     private int quantita;
 
     private Date dataDiMovimentazione;
+
+    @ManyToOne
+    @JoinColumn(name = "prodotto_id")
+    private ProdottoEntity prodotto;
 }

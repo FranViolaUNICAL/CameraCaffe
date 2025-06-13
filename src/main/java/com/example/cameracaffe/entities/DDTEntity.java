@@ -1,12 +1,14 @@
 package com.example.cameracaffe.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.example.cameracaffe.DTO.TipoDDT;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -16,4 +18,16 @@ public class DDTEntity {
     @Id
     private long id;
     private Date dataDiEmissione;
+
+    @OneToOne(optional = true)
+    @JoinColumn(name = "fattura")
+    private FatturaEntity fattura;
+
+    @Nullable
+    private double commissione;
+
+    private TipoDDT tipoDDT;
+
+    @OneToMany(mappedBy = "ddt")
+    private List<DettaglioDDTEntity> dettagliDDT;
 }

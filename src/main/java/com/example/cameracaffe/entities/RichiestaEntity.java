@@ -11,12 +11,16 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RichiestaInstallazione {
+public class RichiestaEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @MapsId
-    @OneToOne
-    @JoinColumn(name = "id")
-    private RichiestaEntity richiesta;
+    private String luogo;
+    private String descrizione;
+    private Date data;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private ClienteEntity cliente;
 }

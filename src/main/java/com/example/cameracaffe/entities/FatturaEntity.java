@@ -1,10 +1,7 @@
 package com.example.cameracaffe.entities;
 
 import com.example.cameracaffe.DTO.StatoFattura;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,5 +21,13 @@ public class FatturaEntity implements Serializable {
     private StatoFattura statoFattura;
 
     private Date dataEmissione;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ordine")
+    private OrdineEntity ordine;
+
+    @OneToOne(optional = false)
+    @JoinColumn(name = "ddt")
+    private DDTEntity ddt;
 
 }

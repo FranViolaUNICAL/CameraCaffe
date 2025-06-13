@@ -1,14 +1,13 @@
 package com.example.cameracaffe.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jdk.jshell.execution.Util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -16,10 +15,15 @@ import java.util.Date;
 @NoArgsConstructor
 public class ManutenzioneEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Date data;
-    private String luogo;
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private InterventoEntity intervento;
+
     private String soluzione;
+
+    @OneToMany(mappedBy = "manutenzione")
+    private List<UtilizzoEntity> utilizzi;
 }

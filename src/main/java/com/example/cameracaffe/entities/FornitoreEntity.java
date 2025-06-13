@@ -21,4 +21,7 @@ public class FornitoreEntity implements Serializable {
 
     @OneToMany(mappedBy = "fornitore", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SedeEntity> sedi;
+
+    @OneToMany(mappedBy = "fornitore")
+    private List<ProdottoEntity> prodotti;
 }

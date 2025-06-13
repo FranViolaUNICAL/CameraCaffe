@@ -3,5 +3,6 @@ package com.example.cameracaffe.DTO;
 public enum Roles {
     CUSTOMER,
     EMPLOYEE,
-    ADMIN
+    ADMIN,
+    SUPPLIER,
 }

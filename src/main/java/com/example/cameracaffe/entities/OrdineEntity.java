@@ -1,16 +1,14 @@
 package com.example.cameracaffe.entities;
 
 import com.example.cameracaffe.DTO.StatoOrdine;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,4 +22,14 @@ public class OrdineEntity implements Serializable {
     private StatoOrdine statoOrdine;
 
     private Date dataOrdine;
+
+    @OneToOne(mappedBy= "ordine", optional = true)
+    private ConsegnaEntity consegna;
+
+    @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
+        private List<FatturaEntity> fatture;
+
+    @OneToMany(mappedBy = "ordine")
+    private List<DettaglioOrdineEntity> dettagliOrdine;
+
 }

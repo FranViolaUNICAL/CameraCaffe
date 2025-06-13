@@ -37,6 +37,10 @@
                             <label for="fpassrepeat">Conferma Password</label>
                             <input type="password" id="fpassrepeat" name="confirmPassword" required>
                         </div>
+                        <div>
+                            <label for="pIva"> Sei un fornitore? Immetti la tua P.Iva</label>
+                            <input type="text" id="pIva" name="partitaIva">
+                        </div>
                         <button type="submit" class="register-btn">Registrati</button>
                     </form>
                     <p class="error-text" th:if="${passwordMismatch}">

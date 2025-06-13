@@ -13,13 +13,14 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LottoEntity implements Serializable {
+    //Questa classe può essere utilizzata per fare roba come TUTTI GLI ALIMENTI LOTTO N. 18302 SONO SCADUTI
     @EmbeddedId
     private EmbeddedLottoKey key;
 
     private Date dataScadenza;
 
-    @MapsId("prodottoId")
+    @MapsId("alimentareId")
     @ManyToOne
-    @JoinColumn(name="prodottoId")
-    private ProdottoEntity prodotto;
+    @JoinColumn(name="prodotto_id")
+    private AlimentareEntity alimentare;
 }
