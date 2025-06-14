@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Registrati - CameraCaffé</title>
     <link rel="stylesheet" href="/css/styles.css" />
+    <style>
+        .hidden { display: none; }
+        .role-selection label {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <div class="wrapper">
@@ -21,30 +28,64 @@
     <main>
         <section class="hero">
             <div class="hero-content">
-                <img src="/img/caffe.png" alt="Tazza di caffè" class="hero-image" width="666"/>
+                <img src="/img/caffe.png" alt="Tazza di caffè" class="hero-image" width="666" />
                 <div class="hero-text">
                     <h2>Registrati</h2>
                     <form class="hero-form" action="/register" method="post">
                         <div>
                             <label for="femail">E-mail</label>
-                            <input type="email" id="femail" name="email" required>
+                            <input type="email" id="femail" name="email" required />
                         </div>
                         <div>
                             <label for="fpass">Password</label>
-                            <input type="password" id="fpass" name="password" required>
+                            <input type="password" id="fpass" name="password" required />
                         </div>
                         <div>
                             <label for="fpassrepeat">Conferma Password</label>
-                            <input type="password" id="fpassrepeat" name="confirmPassword" required>
+                            <input type="password" id="fpassrepeat" name="confirmPassword" required />
                         </div>
-                        <div>
-                            <label for="pIva"> Sei un fornitore/acquirente? Immetti la tua P.Iva</label>
-                            <input type="text" id="pIva" name="partitaIva">
-                            <label for="checkCliente">Spunta se sei un acquirente.</label>
-                            <input type="checkbox" id="checkCliente" name="checkCliente">
+
+                        <fieldset class="role-selection">
+                            <legend>Seleziona il tuo ruolo</legend>
+                            <label>
+                                <input type="radio" name="role" value="SUPPLIER" required /> Supplier
+                            </label>
+                            <label>
+                                <input type="radio" name="role" value="CUSTOMER" required /> Customer
+                            </label>
+                        </fieldset>
+
+                        <!-- Campi per Supplier -->
+                        <div id="supplierFields" class="hidden">
+                            <div>
+                                <label for="nomeReferente">Nome Referente</label>
+                                <input type="text" id="nomeReferente" name="nomeReferente" />
+                            </div>
+                            <div>
+                                <label for="cognomeReferente">Cognome Referente</label>
+                                <input type="text" id="cognomeReferente" name="cognomeReferente" />
+                            </div>
+                            <div>
+                                <label for="pIvaSupplier">Partita IVA</label>
+                                <input type="text" id="pIvaSupplier" name="partitaIvaSupplier" />
+                            </div>
                         </div>
+
+                        <!-- Campi per Customer -->
+                        <div id="customerFields" class="hidden">
+                            <div>
+                                <label for="pIvaCustomer">Partita IVA</label>
+                                <input type="text" id="pIvaCustomer" name="partitaIvaCustomer" />
+                            </div>
+                            <div>
+                                <label for="ragioneSociale">Ragione Sociale</label>
+                                <input type="text" id="ragioneSociale" name="ragioneSociale" />
+                            </div>
+                        </div>
+
                         <button type="submit" class="register-btn">Registrati</button>
                     </form>
+
                     <p class="error-text" th:if="${passwordMismatch}">
                         Le password devono combaciare.
                     </p>
@@ -60,12 +101,11 @@
                 </div>
             </div>
         </section>
-
-
     </main>
 </div>
+
 <div class="coffee-waves">
-    <svg viewBox="0 0 1440 320" preserveAspectRatio="none" >
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
         <path fill="#803b18" fill-opacity="1" d="">
             <animate
                     attributeName="d"
@@ -79,8 +119,43 @@
         </path>
     </svg>
 </div>
+
 <footer>
     <p>&copy; 2025 CameraCaffé. Tutti i diritti riservati.</p>
 </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const supplierFields = document.getElementById('supplierFields');
+        const customerFields = document.getElementById('customerFields');
+
+        // Funzione per mostrare/nascondere
+        function toggleFields(role) {
+            if (role === 'SUPPLIER') {
+                supplierFields.classList.remove('hidden');
+                customerFields.classList.add('hidden');
+                customerFields.querySelectorAll('input').forEach(i => i.value = '');
+            } else if (role === 'CUSTOMER') {
+                customerFields.classList.remove('hidden');
+                supplierFields.classList.add('hidden');
+                supplierFields.querySelectorAll('input').forEach(i => i.value = '');
+            }
+        }
+
+        // Evento change su radio
+        document.querySelectorAll('input[name="role"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                toggleFields(radio.value);
+            });
+        });
+
+        // Mostra al caricamento se c'è un radio selezionato
+        const selectedRole = document.querySelector('input[name="role"]:checked');
+        if (selectedRole) {
+            toggleFields(selectedRole.value);
+        }
+    });
+</script>
+
 </body>
 </html>

@@ -1,8 +1,12 @@
 package com.example.cameracaffe.controllers;
 
 import com.example.cameracaffe.DTO.Roles;
+import com.example.cameracaffe.entities.ClienteEntity;
+import com.example.cameracaffe.entities.FornitoreEntity;
 import com.example.cameracaffe.entities.UserEntity;
+import com.example.cameracaffe.services.ClienteService;
 import com.example.cameracaffe.services.CustomUserDetailsService;
+import com.example.cameracaffe.services.FornitoreService;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,8 +21,14 @@ import java.util.Objects;
 @RequestMapping("/register")
 public class RegisterController {
     private CustomUserDetailsService customUserDetailsService;
-    public RegisterController(CustomUserDetailsService customUserDetailsService) {
+    private FornitoreService fornitoreService;
+    private ClienteService clienteService;
+
+
+    public RegisterController(CustomUserDetailsService customUserDetailsService, FornitoreService fornitoreService, ClienteService clienteService) {
         this.customUserDetailsService = customUserDetailsService;
+        this.fornitoreService = fornitoreService;
+        this.clienteService = clienteService;
     }
     @GetMapping()
     public String register() {
@@ -30,38 +40,61 @@ public class RegisterController {
             @RequestParam String email,
             @RequestParam String password,
             @RequestParam String confirmPassword,
-            @RequestParam(required = false) String partitaIva,
-            @RequestParam(required = false) boolean checkCliente,
+            @RequestParam String role, // SUPPLIER o CUSTOMER
+            @RequestParam(required = false) String partitaIvaSupplier,
+            @RequestParam(required = false) String nomeReferente,
+            @RequestParam(required = false) String cognomeReferente,
+            @RequestParam(required = false) String partitaIvaCustomer,
+            @RequestParam(required = false) String ragioneSociale,
             Model model
     ) {
-        // Password mismatch
+        // Controllo password
         if (!password.equals(confirmPassword)) {
             model.addAttribute("passwordMismatch", true);
             return "register";
         }
 
-        // Email già esistente
+        // Controllo email esistente
         if (customUserDetailsService.findByEmail(email) != null) {
             model.addAttribute("userAlreadyExists", true);
             return "register";
         }
 
-        // Creazione nuovo utente
+        // Creazione utente
         UserEntity user = new UserEntity();
         user.setEmail(email);
         String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
         user.setPassword(hashed);
 
-        // Determinazione ruolo
-        if (partitaIva == null || partitaIva.isBlank()) {
-            user.setRole(Roles.EMPLOYEE);
+        if ("SUPPLIER".equals(role)) {
+            user.setRole(Roles.SUPPLIER);
+
+            // Crea FornitoreEntity
+            FornitoreEntity fornitore = new FornitoreEntity();
+            fornitore.setPartitaIva(partitaIvaSupplier);
+            fornitore.setNomeReferente(nomeReferente);
+            fornitore.setCognomeReferente(cognomeReferente);
+            fornitore.setEmail(email);
+
+            // Salva Fornitore e associa a user (se hai relazione)
+            fornitoreService.save(fornitore);
+            user.setPartitaIva(partitaIvaSupplier);
+
+        } else if ("CUSTOMER".equals(role)) {
+            user.setRole(Roles.CUSTOMER);
+
+            // Crea ClienteEntity
+            ClienteEntity cliente = new ClienteEntity();
+            cliente.setPIva(partitaIvaCustomer);
+            cliente.setRagioneSociale(ragioneSociale);
+
+            // Salva Cliente e associa a user (se hai relazione)
+            clienteService.save(cliente);
+            user.setPartitaIva(partitaIvaCustomer);
+
         } else {
-            if(checkCliente){
-                user.setRole(Roles.CUSTOMER);
-            }else{
-                user.setRole(Roles.SUPPLIER);
-            }
-            user.setPartitaIva(partitaIva); // salva la P.IVA se vuoi
+            // Se non selezionato o altro, assegna ruolo default (ad es. EMPLOYEE)
+            user.setRole(Roles.EMPLOYEE);
         }
 
         customUserDetailsService.save(user);
@@ -69,4 +102,5 @@ public class RegisterController {
 
         return "index";
     }
+
 }
