@@ -3,118 +3,206 @@
 <head>
     <meta charset="UTF-8" />
     <title>Dashboard</title>
-    <link rel="stylesheet" href="/css/styles.css" /> <!-- eventuale css -->
+    <link rel="stylesheet" href="/css/styles.css" />
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: #fff;
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            color: #e38c1b;
+        }
+
+        .card p {
+            margin-bottom: 8px;
+        }
+
+        form {
+            margin-top: 15px;
+        }
+
+        select, input[type="number"] {
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        button[type="submit"], .card button, .register-btn {
+            background-color: #803b18;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #a45224;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        table thead {
+            background-color: #803b18;
+            color: white;
+        }
+
+        .center-btn {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>Benvenuto nella Dashboard</h1>
 
-<h1>Benvenuto nella Dashboard</h1>
+    <div th:switch="${ruolo}">
+        <!-- ========== EMPLOYEE ========== -->
+        <div th:case="'EMPLOYEE'">
+            <h2>Richieste assegnate a te</h2>
 
-<div th:switch="${ruolo}">
+            <div th:if="${#lists.isEmpty(richieste)}">
+                <p>Non hai richieste assegnate al momento.</p>
+            </div>
 
-    <!-- =================== EMPLOYEE =================== -->
-    <div th:case="'EMPLOYEE'">
-        <h2>Richieste assegnate a te</h2>
+            <div th:each="r : ${richieste}">
+                <div class="card">
+                    <h3 th:text="'Richiesta #' + ${r.id}"></h3>
+                    <p><strong>Luogo:</strong> <span th:text="${r.luogo}"></span></p>
+                    <p><strong>Descrizione:</strong> <span th:text="${r.descrizione}"></span></p>
+                    <p><strong>Data:</strong> <span th:text="${#dates.format(r.data, 'dd/MM/yyyy')}"></span></p>
 
-        <div th:if="${#lists.isEmpty(richieste)}">
-            <p>Non hai richieste assegnate al momento.</p>
+                    <form th:action="@{/gestioneRichiesta}" method="post">
+                        <input type="hidden" name="richiestaId" th:value="${r.id}" />
+
+                        <div th:if="${r.tipoIntervento == 'MANUTENZIONE'}">
+                            <h4>Compila utilizzi per intervento di manutenzione</h4>
+                            <label>Tipo Utilizzo</label>
+                            <select name="tipoUtilizzo" required>
+                                <option th:each="tipo : ${tipiUtilizzo}" th:value="${tipo}" th:text="${tipo}"></option>
+                            </select>
+                            <label>Quantità</label>
+                            <input type="number" name="quantitaUtilizzo" min="1" required />
+                        </div>
+
+                        <button type="submit">Invia gestione</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div th:each="r : ${richieste}">
-            <div class="card">
-                <h3 th:text="'Richiesta #' + ${r.id}"></h3>
-                <p><strong>Luogo:</strong> <span th:text="${r.luogo}"></span></p>
-                <p><strong>Descrizione:</strong> <span th:text="${r.descrizione}"></span></p>
-                <p><strong>Data:</strong> <span th:text="${#dates.format(r.data, 'dd/MM/yyyy')}"></span></p>
 
-                <form th:action="@{/gestioneRichiesta}" method="post">
-                    <input type="hidden" name="richiestaId" th:value="${r.id}" />
+        <!-- ========== CUSTOMER ========== -->
+        <div th:case="'CUSTOMER'">
+            <h2>Le tue richieste</h2>
 
-                    <div th:if="${r.tipoIntervento == 'MANUTENZIONE'}">
-                        <h4>Compila utilizzi per intervento di manutenzione</h4>
-                        <label>Tipo Utilizzo</label>
-                        <select name="tipoUtilizzo" required>
-                            <option th:each="tipo : ${tipiUtilizzo}" th:value="${tipo}" th:text="${tipo}"></option>
+            <div class="center-btn">
+                <a href="/richiesta/nuova">
+                    <button class="register-btn">Nuova richiesta di manutenzione</button>
+                </a>
+            </div>
+
+            <div th:if="${#lists.isEmpty(richieste)}">
+                <p>Non hai ancora inviato nessuna richiesta.</p>
+            </div>
+
+            <table th:if="${!#lists.isEmpty(richieste)}">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Descrizione</th>
+                    <th>Luogo</th>
+                    <th>Data</th>
+                    <th>Stato</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="r : ${richieste}">
+                    <td th:text="${r.id}"></td>
+                    <td th:text="${r.descrizione}"></td>
+                    <td th:text="${r.luogo}"></td>
+                    <td th:text="${#dates.format(r.data, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${r.stato}">In elaborazione</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ========== ADMIN ========== -->
+        <div th:case="'ADMIN'">
+            <h2>Assegna Tecnico alle richieste non gestite</h2>
+
+            <div th:if="${#lists.isEmpty(richiesteNonGestite)}">
+                <p>Nessuna richiesta in attesa di assegnazione.</p>
+            </div>
+
+            <div th:each="r : ${richiesteNonGestite}">
+                <div class="card">
+                    <h3 th:text="'Richiesta #' + ${r.id}"></h3>
+                    <p><strong>Luogo:</strong> <span th:text="${r.luogo}"></span></p>
+                    <p><strong>Descrizione:</strong> <span th:text="${r.descrizione}"></span></p>
+                    <p><strong>Cliente:</strong> <span th:text="${r.cliente.pIva} + ' ' + ${r.cliente.ragioneSociale}"></span></p>
+
+                    <form th:action="@{/assegnaTecnico}" method="post">
+                        <input type="hidden" name="richiestaId" th:value="${r.id}" />
+                        <label for="tecnicoId">Tecnico da assegnare</label>
+                        <select id="tecnicoId" name="tecnicoId" required>
+                            <option value="" disabled selected>Scegli tecnico</option>
+                            <option th:each="t : ${tecnici}" th:value="${t.id}" th:text="${t.nome} + ' ' + ${t.cognome}"></option>
                         </select>
-                        <label>Quantità</label>
-                        <input type="number" name="quantitaUtilizzo" min="1" required />
-                    </div>
-
-                    <button type="submit">Invia gestione</button>
-                </form>
+                        <button type="submit">Assegna Tecnico</button>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- =================== CUSTOMER =================== -->
-    <div th:case="'CUSTOMER'">
-        <h2>Le tue richieste</h2>
-
-        <a href="/richiesta/nuova"><button>Nuova richiesta di manutenzione</button></a>
-
-        <div th:if="${#lists.isEmpty(richieste)}">
-            <p>Non hai ancora inviato nessuna richiesta.</p>
-        </div>
-        <table th:if="${!#lists.isEmpty(richieste)}">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Descrizione</th>
-                <th>Luogo</th>
-                <th>Data</th>
-                <th>Stato</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="r : ${richieste}">
-                <td th:text="${r.id}"></td>
-                <td th:text="${r.descrizione}"></td>
-                <td th:text="${r.luogo}"></td>
-                <td th:text="${#dates.format(r.data, 'dd/MM/yyyy')}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- =================== ADMIN =================== -->
-    <div th:case="'ADMIN'">
-        <h2>Assegna Tecnico alle richieste non gestite</h2>
-
-        <div th:if="${#lists.isEmpty(richiesteNonGestite)}">
-            <p>Nessuna richiesta in attesa di assegnazione.</p>
+        <!-- ========== SUPPLIER ========== -->
+        <div th:case="'SUPPLIER'">
+            <h2>Area Supplier</h2>
+            <p>Funzionalità dedicate ai fornitori (da implementare).</p>
         </div>
 
-        <div th:each="r : ${richiesteNonGestite}">
-            <div class="card">
-                <h3 th:text="'Richiesta #' + ${r.id}"></h3>
-                <p><strong>Luogo:</strong> <span th:text="${r.luogo}"></span></p>
-                <p><strong>Descrizione:</strong> <span th:text="${r.descrizione}"></span></p>
-                <p><strong>Cliente:</strong> <span th:text="${r.cliente.pIva} + ' ' + ${r.cliente.ragioneSociale}"></span></p>
-
-                <form th:action="@{/assegnaTecnico}" method="post">
-                    <input type="hidden" name="richiestaId" th:value="${r.id}" />
-                    <label for="tecnicoId">Tecnico da assegnare</label>
-                    <select id="tecnicoId" name="tecnicoId" required>
-                        <option value="" disabled selected>Scegli tecnico</option>
-                        <option th:each="t : ${tecnici}" th:value="${t.id}"></option>
-                    </select>
-                    <button type="submit">Assegna Tecnico</button>
-                </form>
-            </div>
+        <!-- ========== ACCESSO NON AUTORIZZATO ========== -->
+        <div th:case="*">
+            <h2>Accesso non autorizzato</h2>
+            <p>Non disponi di un ruolo valido per visualizzare la dashboard.</p>
         </div>
     </div>
-
-    <!-- =================== SUPPLIER =================== -->
-    <div th:case="'SUPPLIER'">
-        <h2>Area Supplier</h2>
-        <p>Funzionalità dedicate ai fornitori (da implementare).</p>
-    </div>
-
-    <!-- =================== Default / Nessun Ruolo =================== -->
-    <div th:case="*">
-        <h2>Accesso non autorizzato</h2>
-        <p>Non disponi di un ruolo valido per visualizzare la dashboard.</p>
-    </div>
-
 </div>
-
 </body>
 </html>
+

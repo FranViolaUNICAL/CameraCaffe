@@ -46,14 +46,14 @@ public class DashboardController {
         this.tecnicoService = tecnicoService;
     }
 
-    @GetMapping("/dashboard")
+    @GetMapping()
     public String dashboard(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = userDetailsService.loadUserByUsername(auth.getName());
         UserEntity user = userDetailsService.findByEmail(userDetails.getUsername());
         Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
 
-        if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_CUSTOMER"))) {
+        if (authorities.stream().anyMatch(a -> a.getAuthority().equals("CUSTOMER"))) {
             model.addAttribute("ruolo", "CUSTOMER");
             List<RichiestaManutezioneEntity> richiesteCliente = richiestaService.findRichiestaManutenzioneByCliente_partitaIva(user.getPartitaIva());
             List<RichiestaInstallazioneEntity> richiesteInstallazioneCliente = richiestaService.findByRichiestaInstallazioneByCliente_partitaIva(user.getPartitaIva());
@@ -74,7 +74,7 @@ public class DashboardController {
             }
             model.addAttribute("richieste", richieste);
             return "dashboard";
-        } else if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_EMPLOYEE"))) {
+        } else if (authorities.stream().anyMatch(a -> a.getAuthority().equals("EMPLOYEE"))) {
             model.addAttribute("ruolo", "EMPLOYEE");
             List<InstallazioneEntity> installazioniTecnico = installazioneService.findByMatricolaTecnico(user.getMatricolaTecnico());
             List<ManutenzioneEntity> manutenzioniTecnico = manutenzioniService.findByTecnicoMatricola(user.getMatricolaTecnico());
@@ -95,7 +95,7 @@ public class DashboardController {
             }
             model.addAttribute("richieste", richieste);
             return "dashboard";
-        } else if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+        } else if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
             model.addAttribute("ruolo", "ADMIN");
             List<TecnicoEntity> tecnici = tecnicoService.findAll();
             List<RichiestaInstallazioneEntity> richiesteNonGestite = richiestaService.findRichiesteInstallazioneNonGestite();
@@ -120,7 +120,7 @@ public class DashboardController {
             model.addAttribute("richiesteNonGestite", richieste);
             model.addAttribute("tecnici", tecnici);
             return "dashboard";
-        } else if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_SUPPLIER"))) {
+        } else if (authorities.stream().anyMatch(a -> a.getAuthority().equals("SUPPLIER"))) {
             model.addAttribute("ruolo", "SUPPLIER");
             return "dashboard";
         }

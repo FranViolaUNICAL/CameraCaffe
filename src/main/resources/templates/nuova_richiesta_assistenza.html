@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Nuova Richiesta di Manutenzione</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #e38c1b;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #803b18;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        button[type="submit"] {
+            background-color: #803b18;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #a45224;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #fff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Nuova Richiesta di Manutenzione</h1>
+
+    <form th:action="@{/richiesta/salva}" th:object="${richiesta}" method="post">
+        <div class="form-group">
+            <label for="descrizione">Descrizione</label>
+            <input type="text" id="descrizione" th:field="*{descrizione}" placeholder="Descrivi il problema" required />
+        </div>
+
+        <div class="form-group">
+            <label for="luogo">Luogo</label>
+            <input type="text" id="luogo" th:field="*{luogo}" placeholder="Es. Via Roma 123" required />
+        </div>
+
+        <div class="form-group">
+            <label for="data">Data del guasto:</label>
+            <input type="date" id="data" th:field="*{data}" required
+                   th:attr="max=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" />
+        </div>
+
+        <div class="form-group">
+            <label for="tipoIntervento">Tipo di Intervento</label>
+            <select id="tipoIntervento" th:field="*{tipoIntervento}" required>
+                <option value="" disabled selected>Seleziona tipo di intervento</option>
+                <option th:each="tipo : ${tipiIntervento}" th:value="${tipo}" th:text="${tipo}"></option>
+            </select>
+        </div>
+
+        <button type="submit">Invia Richiesta</button>
+    </form>
+
+    <a th:href="@{/dashboard}" class="back-link">Torna alla Dashboard</a>
+</div>
+</body>
+</html>

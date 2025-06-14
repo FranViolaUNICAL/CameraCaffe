@@ -31,6 +31,7 @@ public class RegisterController {
             @RequestParam String password,
             @RequestParam String confirmPassword,
             @RequestParam(required = false) String partitaIva,
+            @RequestParam(required = false) boolean checkCliente,
             Model model
     ) {
         // Password mismatch
@@ -53,9 +54,13 @@ public class RegisterController {
 
         // Determinazione ruolo
         if (partitaIva == null || partitaIva.isBlank()) {
-            user.setRole(Roles.CUSTOMER);
+            user.setRole(Roles.EMPLOYEE);
         } else {
-            user.setRole(Roles.SUPPLIER);
+            if(checkCliente){
+                user.setRole(Roles.CUSTOMER);
+            }else{
+                user.setRole(Roles.SUPPLIER);
+            }
             user.setPartitaIva(partitaIva); // salva la P.IVA se vuoi
         }
 
