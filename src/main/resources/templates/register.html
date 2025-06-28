@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registrati - CameraCaffé</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div class="wrapper">
+    <header>
+        <h1>CameraCaffé - Distributori Automatici</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Chi siamo</a></li>
+                <li><a href="#">Contatti</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <img src="/img/caffe.png" alt="Tazza di caffè" class="hero-image" width="666"/>
+                <div class="hero-text">
+                    <h2>Registrati</h2>
+                    <form class="hero-form" action="/register" method="post">
+                        <div>
+                            <label for="femail">E-mail</label>
+                            <input type="email" id="femail" name="email" required>
+                        </div>
+                        <div>
+                            <label for="fpass">Password</label>
+                            <input type="password" id="fpass" name="password" required>
+                        </div>
+                        <div>
+                            <label for="fpassrepeat">Conferma Password</label>
+                            <input type="password" id="fpassrepeat" name="confirmPassword" required>
+                        </div>
+                        <button type="submit" class="register-btn">Registrati</button>
+                    </form>
+                    <p class="error-text" th:if="${passwordMismatch}">
+                        Le password devono combaciare.
+                    </p>
+                    <p class="error-text" th:if="${userAlreadyExists}">
+                        L'utente é giá registrato.
+                    </p>
+                    <p class="register-successful" th:if="${loginSucceded}">
+                        Registrazione eseguita con successo. Reindirizzamento in corso...
+                    </p>
+                    <p class="login-link">
+                        Già registrato? <a href="/login.html">Login</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+    </main>
+</div>
+<div class="coffee-waves">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none" >
+        <path fill="#803b18" fill-opacity="1" d="">
+            <animate
+                    attributeName="d"
+                    dur="8s"
+                    repeatCount="indefinite"
+                    values="
+                M0,320 C360,240 1080,400 1440,320 L1440,320 L0,320 Z;
+                M0,280 C360,360 1080,200 1440,280 L1440,320 L0,320 Z;
+                M0,320 C360,240 1080,400 1440,320 L1440,320 L0,320 Z"
+            />
+        </path>
+    </svg>
+</div>
+<footer>
+    <p>&copy; 2025 CameraCaffé. Tutti i diritti riservati.</p>
+</footer>
+</body>
+</html>
