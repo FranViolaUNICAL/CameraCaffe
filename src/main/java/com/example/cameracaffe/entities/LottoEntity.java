@@ -1,5 +1,7 @@
 package com.example.cameracaffe.entities;
 
+import com.example.cameracaffe.entities.embeddedKeys.EmbeddedLottoKey;
+import com.example.cameracaffe.entities.prodotti.AlimentareEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -29,4 +29,7 @@ public class UserEntity implements Serializable {
 
     @Nullable
     private String partitaIva;
+
+    @Nullable
+    private long matricolaTecnico;
 }

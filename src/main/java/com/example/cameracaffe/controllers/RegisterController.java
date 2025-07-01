@@ -25,28 +25,43 @@ public class RegisterController {
         return "register";
     }
 
-    @PostMapping()
-    public String registerPost(@RequestParam String email, @RequestParam String password, @RequestParam String confirmPassword, @RequestParam String pIva, Model model) {
-        if(!password.equals(confirmPassword)) {
+    @PostMapping
+    public String registerPost(
+            @RequestParam String email,
+            @RequestParam String password,
+            @RequestParam String confirmPassword,
+            @RequestParam(required = false) String partitaIva,
+            Model model
+    ) {
+        // Password mismatch
+        if (!password.equals(confirmPassword)) {
             model.addAttribute("passwordMismatch", true);
             return "register";
-        }else{
-            if(customUserDetailsService.findByEmail(email) == null) {
-                UserEntity user = new UserEntity();
-                user.setEmail(email);
-                String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
-                user.setPassword(hashed);
-                user.setRole(Roles.CUSTOMER);
-                if(Objects.equals(pIva, "")){
-                    user.setRole(Roles.SUPPLIER);
-                }
-                customUserDetailsService.save(user);
-                model.addAttribute("register-successful", true);
-            }else{
-                model.addAttribute("userAlreadyExists", true);
-                return "register";
-            }
         }
+
+        // Email già esistente
+        if (customUserDetailsService.findByEmail(email) != null) {
+            model.addAttribute("userAlreadyExists", true);
+            return "register";
+        }
+
+        // Creazione nuovo utente
+        UserEntity user = new UserEntity();
+        user.setEmail(email);
+        String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+        user.setPassword(hashed);
+
+        // Determinazione ruolo
+        if (partitaIva == null || partitaIva.isBlank()) {
+            user.setRole(Roles.CUSTOMER);
+        } else {
+            user.setRole(Roles.SUPPLIER);
+            user.setPartitaIva(partitaIva); // salva la P.IVA se vuoi
+        }
+
+        customUserDetailsService.save(user);
+        model.addAttribute("registerSuccessful", true);
+
         return "index";
     }
 }

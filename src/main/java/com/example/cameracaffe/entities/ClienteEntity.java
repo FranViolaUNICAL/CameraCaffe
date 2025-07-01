@@ -1,5 +1,7 @@
 package com.example.cameracaffe.entities;
 
+import com.example.cameracaffe.entities.interventi.InterventoEntity;
+import com.example.cameracaffe.entities.richieste.RichiestaEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -13,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ClienteEntity {
+public class  ClienteEntity {
     @Id
     private String pIva;
     private String ragioneSociale;
@@ -23,4 +25,7 @@ public class ClienteEntity {
 
     @OneToMany(mappedBy = "cliente")
     private List<RichiestaEntity> richieste;
+
+    @OneToMany(mappedBy = "cliente")
+    private List<SedeEntity> sedi;
 }

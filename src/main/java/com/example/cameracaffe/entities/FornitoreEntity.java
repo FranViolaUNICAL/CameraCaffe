@@ -1,5 +1,6 @@
 package com.example.cameracaffe.entities;
 
+import com.example.cameracaffe.entities.prodotti.ProdottoEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

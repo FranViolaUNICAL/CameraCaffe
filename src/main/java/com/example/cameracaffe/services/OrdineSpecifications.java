@@ -5,7 +5,7 @@ import com.example.cameracaffe.DTO.TipologiaProdotto;
 import com.example.cameracaffe.entities.DettaglioOrdineEntity;
 import com.example.cameracaffe.entities.FornitoreEntity;
 import com.example.cameracaffe.entities.OrdineEntity;
-import com.example.cameracaffe.entities.ProdottoEntity;
+import com.example.cameracaffe.entities.prodotti.ProdottoEntity;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;

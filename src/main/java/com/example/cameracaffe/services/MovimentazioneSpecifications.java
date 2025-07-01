@@ -2,6 +2,10 @@ package com.example.cameracaffe.services;
 
 import com.example.cameracaffe.DTO.TipologiaProdotto;
 import com.example.cameracaffe.entities.*;
+import com.example.cameracaffe.entities.prodotti.AlimentareEntity;
+import com.example.cameracaffe.entities.prodotti.DistributoreEntity;
+import com.example.cameracaffe.entities.prodotti.ProdottoEntity;
+import com.example.cameracaffe.entities.prodotti.RicambioEntity;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
@@ -45,7 +49,7 @@ public class MovimentazioneSpecifications {
         };
     }
 
-    public static Specification<OrdineEntity> dataMovimentazioneBetween(LocalDate from, LocalDate to) {
+    public static Specification<MovimentazioneUscitaEntity> dataMovimentazioneBetween(LocalDate from, LocalDate to) {
         return (root, query, cb) -> {
             if (from == null && to == null) return null;
             if (from != null && to != null) return cb.between(root.get("dataDiMovimentazione"), from, to);

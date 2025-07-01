@@ -63,8 +63,8 @@ public class OrdineService {
         dettaglioOrdineRepository.delete(dettaglioOrdineEntity);
     }
 
-    public List<DettaglioOrdineEntity> findAllDettagliForOrdine(OrdineEntity ordineEntity){
-        return dettaglioOrdineRepository.findByOrdine(ordineEntity);
+    public List<DettaglioOrdineEntity> findAllDettagliForOrdine(long ordineId){
+        return dettaglioOrdineRepository.findByOrdine_Id(ordineId);
     }
 
     public List<OrdineEntity> findFiltered(TipologiaProdotto tipoProdotto, StatoOrdine statoOrdine, LocalDate from, LocalDate to, String pIva){

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css" /> <!-- eventuale css -->
+</head>
+<body>
+
+<h1>Benvenuto nella Dashboard</h1>
+
+<div th:switch="${ruolo}">
+
+    <!-- =================== EMPLOYEE =================== -->
+    <div th:case="'EMPLOYEE'">
+        <h2>Richieste assegnate a te</h2>
+
+        <div th:if="${#lists.isEmpty(richieste)}">
+            <p>Non hai richieste assegnate al momento.</p>
+        </div>
+        <div th:each="r : ${richieste}">
+            <div class="card">
+                <h3 th:text="'Richiesta #' + ${r.id}"></h3>
+                <p><strong>Luogo:</strong> <span th:text="${r.luogo}"></span></p>
+                <p><strong>Descrizione:</strong> <span th:text="${r.descrizione}"></span></p>
+                <p><strong>Data:</strong> <span th:text="${#dates.format(r.data, 'dd/MM/yyyy')}"></span></p>
+
+                <form th:action="@{/gestioneRichiesta}" method="post">
+                    <input type="hidden" name="richiestaId" th:value="${r.id}" />
+
+                    <div th:if="${r.tipoIntervento == 'MANUTENZIONE'}">
+                        <h4>Compila utilizzi per intervento di manutenzione</h4>
+                        <label>Tipo Utilizzo</label>
+                        <select name="tipoUtilizzo" required>
+                            <option th:each="tipo : ${tipiUtilizzo}" th:value="${tipo}" th:text="${tipo}"></option>
+                        </select>
+                        <label>Quantità</label>
+                        <input type="number" name="quantitaUtilizzo" min="1" required />
+                    </div>
+
+                    <button type="submit">Invia gestione</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================== CUSTOMER =================== -->
+    <div th:case="'CUSTOMER'">
+        <h2>Le tue richieste</h2>
+
+        <a href="/richiesta/nuova"><button>Nuova richiesta di manutenzione</button></a>
+
+        <div th:if="${#lists.isEmpty(richieste)}">
+            <p>Non hai ancora inviato nessuna richiesta.</p>
+        </div>
+        <table th:if="${!#lists.isEmpty(richieste)}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Descrizione</th>
+                <th>Luogo</th>
+                <th>Data</th>
+                <th>Stato</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${richieste}">
+                <td th:text="${r.id}"></td>
+                <td th:text="${r.descrizione}"></td>
+                <td th:text="${r.luogo}"></td>
+                <td th:text="${#dates.format(r.data, 'dd/MM/yyyy')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- =================== ADMIN =================== -->
+    <div th:case="'ADMIN'">
+        <h2>Assegna Tecnico alle richieste non gestite</h2>
+
+        <div th:if="${#lists.isEmpty(richiesteNonGestite)}">
+            <p>Nessuna richiesta in attesa di assegnazione.</p>
+        </div>
+
+        <div th:each="r : ${richiesteNonGestite}">
+            <div class="card">
+                <h3 th:text="'Richiesta #' + ${r.id}"></h3>
+                <p><strong>Luogo:</strong> <span th:text="${r.luogo}"></span></p>
+                <p><strong>Descrizione:</strong> <span th:text="${r.descrizione}"></span></p>
+                <p><strong>Cliente:</strong> <span th:text="${r.cliente.pIva} + ' ' + ${r.cliente.ragioneSociale}"></span></p>
+
+                <form th:action="@{/assegnaTecnico}" method="post">
+                    <input type="hidden" name="richiestaId" th:value="${r.id}" />
+                    <label for="tecnicoId">Tecnico da assegnare</label>
+                    <select id="tecnicoId" name="tecnicoId" required>
+                        <option value="" disabled selected>Scegli tecnico</option>
+                        <option th:each="t : ${tecnici}" th:value="${t.id}"></option>
+                    </select>
+                    <button type="submit">Assegna Tecnico</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================== SUPPLIER =================== -->
+    <div th:case="'SUPPLIER'">
+        <h2>Area Supplier</h2>
+        <p>Funzionalità dedicate ai fornitori (da implementare).</p>
+    </div>
+
+    <!-- =================== Default / Nessun Ruolo =================== -->
+    <div th:case="*">
+        <h2>Accesso non autorizzato</h2>
+        <p>Non disponi di un ruolo valido per visualizzare la dashboard.</p>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,5 +1,7 @@
 package com.example.cameracaffe.entities;
 
+import com.example.cameracaffe.entities.embeddedKeys.EmbeddedDettaglioDDTKey;
+import com.example.cameracaffe.entities.prodotti.ProdottoEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,4 +24,7 @@ public class DettaglioDDTEntity {
     @ManyToOne
     @JoinColumn(name = "prodotto_id")
     private ProdottoEntity prodotto;
+
+    private int quantita;
+    private double pesoUnitario;
 }

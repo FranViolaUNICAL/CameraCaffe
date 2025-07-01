@@ -2,6 +2,7 @@ package com.example.cameracaffe.services;
 
 import com.example.cameracaffe.DTO.TipoDDT;
 import com.example.cameracaffe.entities.*;
+import com.example.cameracaffe.entities.prodotti.ProdottoEntity;
 import com.example.cameracaffe.repos.FornitoreRepository;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.domain.Sort;

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class SedeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     private String indirizzo;
 
@@ -22,4 +22,8 @@ public class SedeEntity {
     @ManyToOne
     @JoinColumn(name = "fornitore_id")
     private FornitoreEntity fornitore;
+
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private ClienteEntity cliente;
 }

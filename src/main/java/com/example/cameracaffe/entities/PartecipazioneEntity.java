@@ -1,11 +1,11 @@
 package com.example.cameracaffe.entities;
 
+import com.example.cameracaffe.entities.embeddedKeys.EmbeddedPartecipazioneKey;
+import com.example.cameracaffe.entities.interventi.InterventoEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Entity
 @Data
@@ -23,5 +23,5 @@ public class PartecipazioneEntity {
     @MapsId("interventoId")
     @ManyToOne
     @JoinColumn(name = "intervento_id")
-    private Intervento intervento;
+    private InterventoEntity intervento;
 }

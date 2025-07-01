@@ -18,7 +18,7 @@
                     <li><a href="#">Contatti</a></li>
                     <li class="navbar-item-spaced"><p th:if="${isLoggedIn}" th:text="'Bentornato, ' + ${username} + '!'"></p></li>
                     <li>
-                        <form th:if="${isLoggedIn}" th:action="@{/my-profile}" method="get">
+                        <form th:if="${isLoggedIn}" th:action="@{/dashboard}" method="get">
                             <button type="submit" class="profile-btn">Il mio profilo</button>
                         </form>
                     </li>
