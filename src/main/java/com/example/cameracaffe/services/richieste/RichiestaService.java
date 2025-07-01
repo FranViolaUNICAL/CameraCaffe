@@ -34,8 +34,8 @@ public class RichiestaService {
         return richiestaRepository.findAll();
     }
 
-    public void save(RichiestaEntity richiestaEntity) {
-        richiestaRepository.save(richiestaEntity);
+    public long save(RichiestaEntity richiestaEntity) {
+        return richiestaRepository.save(richiestaEntity).getId();
     }
 
     public void saveManutenzione(RichiestaManutezioneEntity richiestaManutezioneEntity) {

@@ -5,10 +5,13 @@ import com.example.cameracaffe.DTO.TipoIntervento;
 import com.example.cameracaffe.entities.ClienteEntity;
 import com.example.cameracaffe.entities.UserEntity;
 import com.example.cameracaffe.entities.richieste.RichiestaEntity;
+import com.example.cameracaffe.entities.richieste.RichiestaInstallazioneEntity;
+import com.example.cameracaffe.entities.richieste.RichiestaManutezioneEntity;
 import com.example.cameracaffe.repos.ClienteRepository;
 import com.example.cameracaffe.services.ClienteService;
 import com.example.cameracaffe.services.CustomUserDetailsService;
 import com.example.cameracaffe.services.richieste.RichiestaService;
+import jakarta.transaction.Transactional;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,17 +48,33 @@ public class RichiestaController {
     }
 
     @PostMapping("/salva")
-    public String salva(Model model, @ModelAttribute RichiestaDTO richiesta){
-        RichiestaEntity r = new RichiestaEntity();
+    @Transactional
+    public String salva(Model model, @ModelAttribute RichiestaDTO richiesta) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(auth.getName());
         UserEntity user = customUserDetailsService.findByEmail(userDetails.getUsername());
         ClienteEntity cliente = clienteService.findByPartitaIva(user.getPartitaIva());
+
+        RichiestaEntity r;
+
+        if(richiesta.getTipoIntervento().equals(TipoIntervento.INSTALLAZIONE)) {
+            RichiestaInstallazioneEntity rie = new RichiestaInstallazioneEntity();
+            // Imposta i campi specifici per l'installazione se presenti
+            r = rie;
+        } else {
+            RichiestaManutezioneEntity rme = new RichiestaManutezioneEntity();
+            // Imposta i campi specifici per la manutenzione se presenti
+            r = rme;
+        }
+
+        // Imposta i campi comuni
         r.setData(richiesta.getData());
         r.setDescrizione(richiesta.getDescrizione());
         r.setLuogo(richiesta.getLuogo());
         r.setCliente(cliente);
-        richiestaService.save(r);
+
+        richiestaService.save(r); // Salva l'entità appropriata in base al tipo
+
         return "redirect:/dashboard";
     }
 

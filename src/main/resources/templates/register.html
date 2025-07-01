@@ -5,13 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Registrati - CameraCaffé</title>
     <link rel="stylesheet" href="/css/styles.css" />
-    <style>
-        .hidden { display: none; }
-        .role-selection label {
-            margin-right: 15px;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
 <div class="wrapper">
@@ -56,7 +49,7 @@
                         </fieldset>
 
                         <!-- Campi per Supplier -->
-                        <div id="supplierFields" class="hidden">
+                        <div id="supplierFields" class=hidden>
                             <div>
                                 <label for="nomeReferente">Nome Referente</label>
                                 <input type="text" id="nomeReferente" name="nomeReferente" />
@@ -72,7 +65,7 @@
                         </div>
 
                         <!-- Campi per Customer -->
-                        <div id="customerFields" class="hidden">
+                        <div id="customerFields" class=hidden>
                             <div>
                                 <label for="pIvaCustomer">Partita IVA</label>
                                 <input type="text" id="pIvaCustomer" name="partitaIvaCustomer" />
@@ -124,34 +117,50 @@
     <p>&copy; 2025 CameraCaffé. Tutti i diritti riservati.</p>
 </footer>
 
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        console.log("DOM Fully Loaded.");
         const supplierFields = document.getElementById('supplierFields');
         const customerFields = document.getElementById('customerFields');
 
+        // Nascondi entrambi i campi all'inizio
+        supplierFields.classList.add('hidden');
+        customerFields.classList.add('hidden');
+
         // Funzione per mostrare/nascondere
         function toggleFields(role) {
+            console.log("Toggling fields for role:", role);
             if (role === 'SUPPLIER') {
                 supplierFields.classList.remove('hidden');
                 customerFields.classList.add('hidden');
+                // Resetta i valori dei campi nascosti
                 customerFields.querySelectorAll('input').forEach(i => i.value = '');
             } else if (role === 'CUSTOMER') {
                 customerFields.classList.remove('hidden');
                 supplierFields.classList.add('hidden');
+                // Resetta i valori dei campi nascosti
                 supplierFields.querySelectorAll('input').forEach(i => i.value = '');
+            } else {
+                // Nessun ruolo selezionato => nascondi tutto
+                supplierFields.classList.add('hidden');
+                customerFields.classList.add('hidden');
             }
         }
 
-        // Evento change su radio
-        document.querySelectorAll('input[name="role"]').forEach(radio => {
-            radio.addEventListener('change', () => {
-                toggleFields(radio.value);
+        // Aggiungi event listener a tutti i radio button
+        const roleRadios = document.querySelectorAll('input[name="role"]');
+        roleRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                console.log("Radio changed:", e.target.value);
+                toggleFields(e.target.value);
             });
         });
 
-        // Mostra al caricamento se c'è un radio selezionato
+        // Verifica se c'è un radio selezionato al caricamento della pagina
         const selectedRole = document.querySelector('input[name="role"]:checked');
         if (selectedRole) {
+            console.log("Found selected role:", selectedRole.value);
             toggleFields(selectedRole.value);
         }
     });
