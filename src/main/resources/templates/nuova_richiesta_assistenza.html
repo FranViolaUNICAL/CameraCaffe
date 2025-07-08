@@ -77,6 +77,11 @@
 
     <form th:action="@{/richiesta/salva}" th:object="${richiesta}" method="post">
         <div class="form-group">
+            <label for="distributoreId"> Numero Identificativo del Distributore </label>
+            <input type="number" id="distributoreId" th:field="*{idDistributore}" placeholder="ID del Distributore" required />
+        </div>
+
+        <div class="form-group">
             <label for="descrizione">Descrizione</label>
             <input type="text" id="descrizione" th:field="*{descrizione}" placeholder="Descrivi il problema" required />
         </div>
@@ -84,12 +89,6 @@
         <div class="form-group">
             <label for="luogo">Luogo</label>
             <input type="text" id="luogo" th:field="*{luogo}" placeholder="Es. Via Roma 123" required />
-        </div>
-
-        <div class="form-group">
-            <label for="data">Data del guasto:</label>
-            <input type="date" id="data" th:field="*{data}" required
-                   th:attr="max=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" />
         </div>
 
         <div class="form-group">

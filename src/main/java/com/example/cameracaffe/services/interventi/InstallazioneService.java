@@ -1,7 +1,9 @@
 package com.example.cameracaffe.services.interventi;
 
 import com.example.cameracaffe.entities.interventi.InstallazioneEntity;
+import com.example.cameracaffe.entities.interventi.InterventoEntity;
 import com.example.cameracaffe.repos.interventi.InstallazioneRepository;
+import com.example.cameracaffe.repos.interventi.InterventoRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -11,9 +13,11 @@ import java.util.List;
 @Service
 public class InstallazioneService {
     private InstallazioneRepository installazioneRepository;
+    private InterventoRepository interventoRepository;
 
-    public InstallazioneService(InstallazioneRepository installazioneRepository) {
+    public InstallazioneService(InstallazioneRepository installazioneRepository, InterventoRepository interventoRepository) {
         this.installazioneRepository = installazioneRepository;
+        this.interventoRepository = interventoRepository;
     }
 
     public List<InstallazioneEntity> findFiltered(long cliente, long sede, String modello){
@@ -27,6 +31,18 @@ public class InstallazioneService {
 
     public List<InstallazioneEntity> findAll(){
         return installazioneRepository.findAll();
+    }
+
+    public void addIntervento(InterventoEntity intervento){
+        interventoRepository.save(intervento);
+    }
+
+    public InterventoEntity findInterventoById(long id){
+        return interventoRepository.findById(id).orElse(null);
+    }
+
+    public List<InterventoEntity> findAllIntervento(){
+        return interventoRepository.findAll();
     }
 
     public InstallazioneEntity findById(long id){

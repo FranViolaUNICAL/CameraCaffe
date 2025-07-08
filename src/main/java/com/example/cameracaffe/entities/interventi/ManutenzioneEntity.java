@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public class ManutenzioneEntity extends InterventoEntity {
     @Id
     private long id;

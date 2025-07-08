@@ -21,6 +21,7 @@ public class RichiestaEntity {
     private String luogo;
     private String descrizione;
     private Date data;
+    private long idDistributore;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")

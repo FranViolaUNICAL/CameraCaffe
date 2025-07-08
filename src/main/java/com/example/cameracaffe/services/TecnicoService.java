@@ -22,6 +22,10 @@ public class TecnicoService {
         return tecnicoRepository.findAll();
     }
 
+    public TecnicoEntity findById(Long id) {
+        return tecnicoRepository.findById(id).orElse(null);
+    }
+
     public void save(TecnicoEntity tecnico){
         tecnicoRepository.save(tecnico);
     }

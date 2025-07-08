@@ -110,7 +110,7 @@
                     <form th:action="@{/gestioneRichiesta}" method="post">
                         <input type="hidden" name="richiestaId" th:value="${r.id}" />
 
-                        <div th:if="${r.tipoIntervento == 'MANUTENZIONE'}">
+                        <div th:if="${r.tipoIntervento.toString() == 'MANUTENZIONE'}">
                             <h4>Compila utilizzi per intervento di manutenzione</h4>
                             <label>Tipo Utilizzo</label>
                             <select name="tipoUtilizzo" required>
@@ -156,7 +156,6 @@
                     <td th:text="${r.descrizione}"></td>
                     <td th:text="${r.luogo}"></td>
                     <td th:text="${#dates.format(r.data, 'dd/MM/yyyy')}"></td>
-                    <td th:text="${r.stato}">In elaborazione</td>
                 </tr>
                 </tbody>
             </table>
@@ -177,16 +176,50 @@
                     <p><strong>Descrizione:</strong> <span th:text="${r.descrizione}"></span></p>
                     <p><strong>Cliente:</strong> <span th:text="${r.cliente.pIva} + ' ' + ${r.cliente.ragioneSociale}"></span></p>
 
-                    <form th:action="@{/assegnaTecnico}" method="post">
+                    <form th:action="@{/dashboard/assegnaTecnico}" method="post">
                         <input type="hidden" name="richiestaId" th:value="${r.id}" />
                         <label for="tecnicoId">Tecnico da assegnare</label>
                         <select id="tecnicoId" name="tecnicoId" required>
                             <option value="" disabled selected>Scegli tecnico</option>
-                            <option th:each="t : ${tecnici}" th:value="${t.id}" th:text="${t.nome} + ' ' + ${t.cognome}"></option>
+                            <option th:each="t : ${tecnici}" th:value="${t.matricola}" th:text="${t.matricola}"></option>
                         </select>
                         <button type="submit">Assegna Tecnico</button>
                     </form>
                 </div>
+            </div>
+
+            <div class="card" style="margin-top: 50px; max-width: 600px;">
+                <h2 style="text-align: center;">Aggiungi nuovo Tecnico</h2>
+                <form th:action="@{/dashboard/aggiungiTecnico}" method="post" style="display: flex; flex-direction: column; gap: 1rem; padding: 20px;">
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label for="nome" style="font-weight: bold;">Nome</label>
+                        <input type="text" id="nome" name="nome" required style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                    </div>
+
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label for="cognome" style="font-weight: bold;">Cognome</label>
+                        <input type="text" id="cognome" name="cognome" required style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                    </div>
+
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label for="email" style="font-weight: bold;">Email (per l'account)</label>
+                        <input type="email" id="email" name="email" required style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                    </div>
+
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label for="password" style="font-weight: bold;">Password temporanea</label>
+                        <input type="password" id="password" name="password" required style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                    </div>
+
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label for="specializzazione" style="font-weight: bold;">Specializzazione</label>
+                        <input type="text" id="specializzazione" name="specializzazione" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="align-self: center; padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                        Crea Tecnico e Account
+                    </button>
+                </form>
             </div>
         </div>
 

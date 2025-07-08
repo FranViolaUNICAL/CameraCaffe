@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Inheritance(strategy = InheritanceType.JOINED)
 public class InstallazioneEntity extends InterventoEntity{
     @Id
     private long id;

@@ -11,9 +11,11 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RichiestaDTO {
+    private long id;
     private String descrizione, luogo;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date data;
+    private Date data = new Date();
     private TipoIntervento tipoIntervento;
     private ClienteDTO cliente;
+    private long idDistributore;
 }

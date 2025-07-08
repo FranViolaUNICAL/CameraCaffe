@@ -72,6 +72,7 @@ public class RichiestaController {
         r.setDescrizione(richiesta.getDescrizione());
         r.setLuogo(richiesta.getLuogo());
         r.setCliente(cliente);
+        r.setIdDistributore(richiesta.getIdDistributore());
 
         richiestaService.save(r); // Salva l'entità appropriata in base al tipo
 

@@ -42,6 +42,10 @@ public class ProdottoService {
         distributoreRepository.save(distributoreEntity);
     }
 
+    public DistributoreEntity findDistributoreById(Long id) {
+        return distributoreRepository.findById(id).orElse(null);
+    }
+
     public void deleteDistributore(DistributoreEntity distributoreEntity) {
         distributoreRepository.delete(distributoreEntity);
     }

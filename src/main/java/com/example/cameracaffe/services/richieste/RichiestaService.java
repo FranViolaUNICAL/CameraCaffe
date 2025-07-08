@@ -30,6 +30,18 @@ public class RichiestaService {
         return richiestaManutenzioneRepository.findAll();
     }
 
+    public RichiestaEntity findById(long id) {
+        return richiestaRepository.findById(id).orElse(null);
+    }
+
+    public RichiestaManutezioneEntity findManutezioniById(long id) {
+        return richiestaManutenzioneRepository.findById(id).orElse(null);
+    }
+
+    public RichiestaInstallazioneEntity findInstallazioniById(long id) {
+        return richiestaInstallazioneRepository.findById(id).orElse(null);
+    }
+
     public List<RichiestaEntity> findAll() {
         return richiestaRepository.findAll();
     }
@@ -73,4 +85,5 @@ public class RichiestaService {
     public List<RichiestaInstallazioneEntity> findByRichiestaInstallazioneByCliente_partitaIva(String partitaIva) {
         return richiestaInstallazioneRepository.findRichiesteByCliente_pIva(partitaIva);
     }
+
 }

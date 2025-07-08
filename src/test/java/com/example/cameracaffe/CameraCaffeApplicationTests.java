@@ -10,4 +10,6 @@ class CameraCaffeApplicationTests {
     void contextLoads() {
     }
 
+
+
 }
